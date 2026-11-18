@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Smart Farm Hub — ผู้ช่วยจัดการงานเกษตร</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai+Looped:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f7f2;
+  --bg-grad:radial-gradient(circle at top right, #e5f1df 0%, #f4f7f2 45%);
+  --card:#ffffff;
+  --card-sub:#f8fbf6;
+  --ink:#132a1c;
+  --mut:#586e60;
+  --g1:#124527;
+  --g1-hover:#1b5e36;
+  --g2:#238648;
+  --g2-hover:#1c6e3b;
+  --g3:#dcf0d3;
+  --acc:#d9f04a;
+  --acc-ink:#112b1a;
+  --warn-bg:#fffbeb;
+  --warn-ink:#78350f;
+  --warn-line:#f59e0b;
+  --danger:#dc2626;
+  --danger-bg:#fef2f2;
+  --line:#dfe9da;
+  --shadow:0 4px 20px -2px rgba(18, 69, 39, 0.06), 0 1px 3px rgba(18, 69, 39, 0.04);
+  --shadow-lg:0 12px 28px -4px rgba(18, 69, 39, 0.12);
+  --r-lg:18px;
+  --r-md:12px;
+  --r-sm:8px;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c1710;
+    --bg-grad:radial-gradient(circle at top right, #14291c 0%, #0c1710 50%);
+    --card:#15251b;
+    --card-sub:#1b2f23;
+    --ink:#e8f4e5;
+    --mut:#96b09e;
+    --g1:#0a2917;
+    --g1-hover:#154228;
+    --g2:#34a85d;
+    --g2-hover:#2b8f4e;
+    --g3:#223e2c;
+    --warn-bg:#2b2109;
+    --warn-ink:#fde68a;
+    --warn-line:#d97706;
+    --danger:#f87171;
+    --danger-bg:#331515;
+    --line:#253d2e;
+    --shadow:0 4px 20px -2px rgba(0, 0, 0, 0.35);
+    --shadow-lg:0 12px 28px -4px rgba(0, 0, 0, 0.5);
+  }
+}
+
+:root[data-theme="dark"]{
+  --bg:#0c1710;
+  --bg-grad:radial-gradient(circle at top right, #14291c 0%, #0c1710 50%);
+  --card:#15251b;
+  --card-sub:#1b2f23;
+  --ink:#e8f4e5;
+  --mut:#96b09e;
+  --g1:#0a2917;
+  --g1-hover:#154228;
+  --g2:#34a85d;
+  --g2-hover:#2b8f4e;
+  --g3:#223e2c;
+  --warn-bg:#2b2109;
+  --warn-ink:#fde68a;
+  --warn-line:#d97706;
+  --danger:#f87171;
+  --danger-bg:#331515;
+  --line:#253d2e;
+  --shadow:0 4px 20px -2px rgba(0, 0, 0, 0.35);
+  --shadow-lg:0 12px 28px -4px rgba(0, 0, 0, 0.5);
+}
+
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  background-image:var(--bg-grad);
+  background-attachment:fixed;
+  color:var(--ink);
+  font:17px/1.65 "Noto Sans Thai Looped",Tahoma,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+#app{display:flex;min-height:100vh}
+
+/* Sidebar Navigation */
+nav{
+  width:270px;
+  background:linear-gradient(180deg, var(--g1) 0%, #0d361e 100%);
+  color:#fff;
+  padding:20px 14px;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+  flex:none;
+  display:flex;
+  flex-direction:column;
+  border-right:1px solid rgba(255,255,255,0.08);
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:4px 8px 16px;
+  border-bottom:1px solid rgba(255,255,255,0.12);
+  margin-bottom:12px;
+}
+.brand-icon{
+  width:42px;height:42px;
+  border-radius:12px;
+  background:var(--acc);
+  color:var(--acc-ink);
+  display:grid;place-items:center;
+  font-size:22px;flex:none;
+  box-shadow:0 4px 12px rgba(217,240,74,0.25);
+}
+nav h1{font-size:20px;margin:0;font-weight:800;letter-spacing:-0.01em;line-height:1.2}
+nav small.sub{display:block;color:#a7d3b4;font-size:12.5px;margin-top:2px}
+.nav-grp{
+  font-size:11.5px;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  color:#8ab899;
+  margin:14px 10px 6px;
+  font-weight:700;
+}
+nav a{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:10px 12px;
+  border-radius:var(--r-md);
+  color:#e4f3e7;
+  text-decoration:none;
+  font-size:16px;
+  font-weight:500;
+  margin-bottom:3px;
+  transition:all .18s ease;
+}
+nav a svg{width:19px;height:19px;opacity:.85;flex:none;transition:transform .18s}
+nav a:hover:not(.on){background:var(--g1-hover);transform:translateX(2px)}
+nav a.on{
+  background:var(--acc);
+  color:var(--acc-ink);
+  font-weight:700;
+  box-shadow:0 4px 12px rgba(0,0,0,0.15);
+}
+nav a.on svg{opacity:1}
+
+.nav-foot{
+  margin-top:auto;
+  padding-top:14px;
+  border-top:1px solid rgba(255,255,255,0.12);
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.theme-btn{
+  background:rgba(255,255,255,0.1);
+  color:#fff;
+  border:1px solid rgba(255,255,255,0.16);
+  padding:8px 12px;
+  border-radius:var(--r-md);
+  font-size:14.5px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  width:100%;
+}
+.theme-btn:hover{background:rgba(255,255,255,0.18)}
+
+/* Main Content */
+main{
+  flex:1;
+  padding:28px 32px 48px;
+  min-width:0;
+  max-width:1160px;
+  margin:0 auto;
+  animation:fadeIn .22s ease;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+#menu{display:none}
+.overlay{display:none}
+
+/* Typography & Headers */
+.page-hd{margin-bottom:20px}
+h2{font-size:28px;margin:0 0 4px;font-weight:800;letter-spacing:-0.01em;display:flex;align-items:center;gap:10px}
+h3{margin:0 0 12px;font-size:19px;font-weight:700;display:flex;align-items:center;justify-content:space-between;gap:8px}
+p.s{color:var(--mut);margin:0 0 16px;font-size:15.5px}
+a{color:var(--g2);text-decoration-thickness:1.5px;text-underline-offset:3px}
+
+/* Grid & Cards */
+.g{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.g2{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.c{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--r-lg);
+  padding:20px;
+  box-shadow:var(--shadow);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.stat-card{position:relative;overflow:hidden}
+.stat-card::after{
+  content:'';position:absolute;right:-14px;bottom:-14px;
+  width:72px;height:72px;border-radius:50%;
+  background:var(--g3);opacity:.45;pointer-events:none;
+}
+.big{font-size:32px;font-weight:800;color:var(--g2);line-height:1.2;margin-top:4px;letter-spacing:-0.02em}
+.big small{font-size:15px;font-weight:600;color:var(--mut)}
+
+/* Farm Plots */
+.plots{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:12px}
+.plot{
+  border-radius:14px;
+  padding:14px 12px;
+  font-size:14px;
+  color:#fff;
+  min-height:92px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  background:linear-gradient(135deg, #278b4b 0%, #1b6937 100%);
+  box-shadow:0 4px 12px rgba(27,105,55,0.22);
+  position:relative;
+  overflow:hidden;
+}
+.plot::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(-45deg,rgba(255,255,255,0.06) 0 8px,transparent 8px 16px);
+}
+.plot.h{
+  background:linear-gradient(135deg, #d99b1e 0%, #b4780e 100%);
+  box-shadow:0 4px 12px rgba(180,120,14,0.25);
+}
+.plot.done{
+  background:linear-gradient(135deg, #5d7365 0%, #435449 100%);
+  box-shadow:none;opacity:.85;
+}
+.plot b{display:block;font-size:16.5px;font-weight:700;position:relative}
+.plot span{position:relative;opacity:.92;font-size:13px}
+.plot .p-badge{
+  display:inline-block;align-self:flex-start;
+  background:rgba(0,0,0,0.22);padding:2px 8px;
+  border-radius:20px;font-size:12px;margin-top:6px;position:relative;
+}
+
+/* Forms & Buttons */
+label{display:block;font-size:14.5px;font-weight:600;color:var(--mut);margin-bottom:4px}
+input,select,textarea{
+  font:inherit;
+  padding:10px 14px;
+  border-radius:var(--r-md);
+  border:1.5px solid var(--line);
+  background:var(--card-sub);
+  color:var(--ink);
+  width:100%;
+  margin:0 0 12px;
+  transition:border-color .15s, box-shadow .15s, background .15s;
+}
+input:focus,select:focus,textarea:focus{
+  outline:none;
+  border-color:var(--g2);
+  background:var(--card);
+  box-shadow:0 0 0 3.5px rgba(35,134,72,0.16);
+}
+button{
+  font:inherit;
+  padding:10px 18px;
+  border-radius:var(--r-md);
+  background:var(--g2);
+  color:#fff;
+  border:0;
+  cursor:pointer;
+  font-weight:600;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  transition:all .15s ease;
+}
+button:hover{background:var(--g2-hover);transform:translateY(-1px)}
+button:active{transform:translateY(0)}
+button.o{background:transparent;color:var(--g2);border:1.5px solid var(--g2)}
+button.o:hover{background:var(--g3)}
+button.d{background:var(--danger-bg);color:var(--danger);border:1px solid rgba(220,38,38,0.2);padding:6px 12px;font-size:14.5px}
+button.d:hover{background:var(--danger);color:#fff}
+button.sm{padding:6px 12px;font-size:14.5px}
+button:focus-visible,a:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+
+/* Notes, Tags & Lists */
+.note{
+  background:var(--warn-bg);
+  color:var(--warn-ink);
+  border:1px solid rgba(245,158,11,0.3);
+  border-left:5px solid var(--warn-line);
+  padding:12px 16px;
+  border-radius:var(--r-md);
+  margin:0 0 18px;
+  font-size:15px;
+  line-height:1.55;
+}
+.tag{
+  display:inline-flex;align-items:center;
+  background:var(--g3);color:var(--ink);
+  padding:2px 11px;border-radius:20px;
+  font-size:13.5px;font-weight:600;
+}
+.row{
+  display:flex;gap:10px;flex-wrap:wrap;
+  align-items:center;justify-content:space-between;
+  padding:11px 0;border-bottom:1px solid var(--line);
+}
+.row:last-child{border-bottom:0;padding-bottom:0}
+.row:first-child{padding-top:0}
+
+/* Tables */
+.sc{overflow-x:auto;border-radius:var(--r-md);border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:15.5px}
+th{background:var(--card-sub);color:var(--mut);font-weight:700;font-size:14px}
+td,th{padding:11px 14px;border-bottom:1px solid var(--line);text-align:left}
+tr:last-child td{border-bottom:0}
+tr:hover td{background:var(--card-sub)}
+
+.empty{
+  text-align:center;color:var(--mut);
+  padding:32px 16px;
+  background:var(--card-sub);
+  border-radius:var(--r-md);
+  border:1px dashed var(--line);
+  font-size:15.5px;
+}
+
+/* AI Chat */
+.chat-box{
+  display:flex;flex-direction:column;gap:10px;
+  min-height:180px;max-height:420px;overflow-y:auto;
+  padding:14px;background:var(--card-sub);
+  border-radius:var(--r-md);border:1px solid var(--line);
+  margin-bottom:14px;
+}
+.bub{
+  padding:12px 16px;border-radius:16px;
+  max-width:82%;line-height:1.6;font-size:16px;
+  box-shadow:0 1px 2px rgba(0,0,0,0.04);
+}
+.u{background:var(--g2);color:#fff;margin-left:auto;border-bottom-right-radius:4px}
+.a{background:var(--card);border:1px solid var(--line);border-bottom-left-radius:4px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chips button{font-size:14px;padding:6px 12px;border-radius:20px}
+.chat-in{display:flex;gap:8px;align-items:stretch}
+.chat-in input{margin:0;flex:1}
+
+/* Crop Guide Buttons */
+.crop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px}
+.crop-btn{
+  padding:12px;border-radius:var(--r-md);
+  justify-content:space-between;text-align:left;
+}
+
+/* Toast & Error */
+#toast{
+  position:fixed;bottom:calc(22px + env(safe-area-inset-bottom,0px));
+  left:50%;transform:translateX(-50%);
+  background:#112b1a;color:#fff;
+  padding:11px 22px;border-radius:30px;
+  display:none;z-index:20;
+  font-weight:600;font-size:15.5px;
+  box-shadow:var(--shadow-lg);
+  border:1px solid rgba(255,255,255,0.15);
+}
+.err{color:var(--danger);font-size:15px;font-weight:600;margin-top:8px}
+
+/* Mobile Responsive */
+@media(max-width:860px){
+  #menu{
+    display:inline-flex;position:fixed;
+    top:calc(10px + env(safe-area-inset-top,0px));
+    right:12px;z-index:15;
+    background:var(--g1);
+    box-shadow:var(--shadow-lg);
+    padding:9px 14px;
+  }
+  .overlay.open{
+    display:block;position:fixed;inset:0;
+    background:rgba(0,0,0,0.45);z-index:11;
+    backdrop-filter:blur(2px);
+  }
+  nav{
+    position:fixed;z-index:12;left:-285px;
+    transition:left .25s cubic-bezier(.4,0,.2,1);
+    box-shadow:var(--shadow-lg);
+  }
+  nav.open{left:0}
+  main{padding:64px 16px 32px}
+  h2{font-size:24px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <button id="menu" aria-label="เปิดเมนู">☰ เมนู</button>
+  <div id="ov" class="overlay"></div>
+  <nav id="nav"></nav>
+  <main id="main"></main>
+</div>
+<div id="toast" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const DB={
+  get(k,d){try{const v=localStorage.getItem('sfh_'+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem('sfh_'+k,JSON.stringify(v))}catch(e){toast('บันทึกไม่ได้ ตรวจสอบการตั้งค่าเบราว์เซอร์')}}
+};
+const toast=t=>{const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2600)};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const fmt=n=>Number(n).toLocaleString('th-TH',{maximumFractionDigits:2});
+const todayS=()=>new Date().toISOString().slice(0,10);
+
+/* ธีม สว่าง/มืด */
+const applyTheme=t=>{
+  if(t==='dark'||t==='light') document.documentElement.setAttribute('data-theme',t);
+  else document.documentElement.removeAttribute('data-theme');
+  DB.set('theme',t);
+};
+applyTheme(DB.get('theme','auto'));
+const toggleTheme=()=>{
+  const cur=document.documentElement.getAttribute('data-theme');
+  const isDark=cur==='dark'||(!cur&&matchMedia('(prefers-color-scheme:dark)').matches);
+  const next=isDark?'light':'dark';
+  applyTheme(next);
+  toast(next==='dark'?'เปลี่ยนเป็นโหมดมืดแล้ว':'เปลี่ยนเป็นโหมดสว่างแล้ว');
+  renderNav();
+};
+
+const SRC={
+  nabc:['ศูนย์ข้อมูลเกษตรแห่งชาติ (NABC)','https://www.nabc.go.th/'],
+  doae:['กรมส่งเสริมการเกษตร','https://www.doae.go.th/'],
+  doa:['กรมวิชาการเกษตร','https://www.doa.go.th/th/'],
+  ldd:['กรมพัฒนาที่ดิน','https://www.ldd.go.th/'],
+  tmd:['กรมอุตุนิยมวิทยา','https://www.tmd.go.th/'],
+  moac:['กระทรวงเกษตรและสหกรณ์','https://www.moac.go.th/'],
+  esc:['ศูนย์วิทยบริการเพื่อส่งเสริมการเกษตร','https://esc.doae.go.th/']
+};
+const srcLink=k=>`<a href="${SRC[k][1]}" target="_blank" rel="noopener">${SRC[k][0]}</a>`;
+const ref=(...k)=>`<p class="s" style="font-size:13.5px;margin-top:10px;margin-bottom:0">แหล่งอ้างอิง: ${k.map(srcLink).join(', ')} (ข้อมูลสรุปโดยทั่วไป โปรดตรวจสอบเอกสารต้นทางล่าสุดก่อนใช้งานจริง)</p>`;
+const NOTE=t=>`<div class="note">${t}</div>`;
+
+/* ไอคอน SVG ขนาดกะทัดรัด */
+const ICONS={
+  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+  weather:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>',
+  disease:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M11 8v6M8 11h6"/></svg>',
+  soil:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 22h20"/><path d="M12 2v12"/><path d="m8 10 4 4 4-4"/><path d="M5 18h14"/></svg>',
+  guide:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>',
+  cost:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="12" y2="18"/></svg>',
+  price:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>',
+  plan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+  water:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>',
+  know:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
+  ai:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>',
+  me:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'
+};
+
+/* ---------- ข้อมูลอ้างอิงภายในแอป ---------- */
+const CROPS={
+'ข้าว':{a:'พืชล้มลุกตระกูลหญ้า ปลูกในนาน้ำขัง',b:'ดินเหนียวหรือดินร่วนเหนียว เก็บน้ำได้ดี pH ราว 5.5–7',c:'นาปีเริ่มต้นฤดูฝน (ราว พ.ค.–ก.ค.) นาปรังปลูกในฤดูแล้งเมื่อมีน้ำชลประทาน',d:'ไถดะ ตากดิน ไถแปร คราดและปรับระดับให้เรียบ',e:'หว่านน้ำตม ปักดำ หรือใช้เครื่องหยอด',f:'รักษาระดับน้ำในนาตามระยะการเจริญเติบโต ระบายน้ำก่อนเก็บเกี่ยว',g:'ใส่ตามค่าวิเคราะห์ดินหรือคำแนะนำของเจ้าหน้าที่เกษตรในพื้นที่',h:'โรคไหม้ โรคขอบใบแห้ง เพลี้ยกระโดดสีน้ำตาล หนอนกอ',i:'กำจัดวัชพืช เฝ้าระวังโรคและแมลงสม่ำเสมอ',j:'ขึ้นกับพันธุ์ ราว 100–140 วัน',s:['doa','doae']},
+'ข้าวโพด':{a:'พืชไร่ตระกูลหญ้า ใช้ทำอาหารสัตว์และบริโภค',b:'ดินร่วนระบายน้ำดี pH ราว 5.5–7',c:'ต้นฤดูฝน หรือปลูกในฤดูแล้งเมื่อมีน้ำเพียงพอ',d:'ไถพรวนให้ดินร่วนซุย',e:'หยอดเมล็ดเป็นหลุมหรือเป็นแถว',f:'ต้องการน้ำสม่ำเสมอโดยเฉพาะช่วงออกไหม',g:'แบ่งใส่ปุ๋ยหลายครั้งตามอายุพืช',h:'หนอนกระทู้ข้าวโพดลายจุด โรคราน้ำค้าง',i:'กำจัดวัชพืช พูนโคน',j:'ขึ้นกับพันธุ์ ราว 90–120 วัน',s:['doa','doae']},
+'มะเขือเทศ':{a:'พืชผักผลไม้กินผล ไม้เลื้อยหรือทรงพุ่ม',b:'ดินร่วนปนทราย ระบายน้ำดี มีอินทรียวัตถุสูง',c:'ปลูกได้เกือบทั้งปี ฤดูหนาวให้ผลดี',d:'ยกแปลง ผสมปุ๋ยคอกหรือปุ๋ยหมัก',e:'เพาะกล้าแล้วย้ายปลูก ทำค้างพยุงต้น',f:'ให้น้ำสม่ำเสมอ หลีกเลี่ยงน้ำขังและรดโดนใบ',g:'ใส่ปุ๋ยรองพื้นและแต่งหน้าตามระยะการเจริญเติบโต',h:'โรคใบไหม้ โรคเหี่ยวเขียว แมลงหวี่ขาว',i:'ตัดแต่งกิ่ง ผูกค้าง คลุมดิน',j:'ราว 60–90 วันหลังย้ายปลูก',s:['doa','doae']},
+'พริก':{a:'พืชผักเศรษฐกิจ ผลมีรสเผ็ด',b:'ดินร่วนระบายน้ำดี pH ราว 6–6.8',c:'ปลูกได้ตลอดปีหากมีน้ำ',d:'ยกร่อง ผสมปุ๋ยอินทรีย์',e:'เพาะกล้าแล้วย้ายปลูก ระยะห่างตามพันธุ์',f:'ให้น้ำสม่ำเสมอ ไม่ให้แฉะ',g:'ใส่ปุ๋ยรองพื้นและแบ่งใส่ตามระยะการเจริญเติบโต',h:'โรคกุ้งแห้ง โรคแอนแทรคโนส เพลี้ยไฟ ไรขาว',i:'คลุมดิน กำจัดวัชพืช เก็บเศษพืชที่เป็นโรค',j:'เริ่มเก็บผลราว 70–100 วันหลังย้ายปลูก',s:['doa','doae']}};
+const CROPLIST=['ข้าว','ข้าวโพด','มันสำปะหลัง','อ้อย','มะม่วง','ทุเรียน','มะพร้าว','กล้วย','มะเขือเทศ','พริก','ผักบุ้ง','ผักกาด'];
+const GL=[['a','ลักษณะของพืช'],['b','สภาพดินที่เหมาะสม'],['c','ช่วงเวลาปลูก'],['d','วิธีเตรียมดิน'],['e','วิธีปลูก'],['f','การให้น้ำ'],['g','การใส่ปุ๋ย'],['h','โรคและแมลงศัตรูพืช'],['i','วิธีดูแลรักษา'],['j','ระยะเวลาเก็บเกี่ยว']];
+const DIS=[
+{n:'โรคไหม้ข้าว',p:'ข้าว',sym:'แผลรูปตาหรือรูปเพชรสีน้ำตาลบนใบ คอรวงอาจหัก',cause:'เชื้อราในสภาพอากาศชื้น ใส่ไนโตรเจนมากเกินไป',pre:'ใช้พันธุ์ต้านทาน ไม่หว่านหนาแน่น แบ่งใส่ปุ๋ยไนโตรเจน',tr:'ปรึกษาเจ้าหน้าที่เกษตรเรื่องการใช้สารป้องกันกำจัดที่ขึ้นทะเบียน',s:'doa'},
+{n:'โรคใบจุดมะม่วง (แอนแทรคโนส)',p:'มะม่วง',sym:'จุดดำบนใบ ดอกร่วง ผลมีแผลดำ',cause:'เชื้อรา พบมากช่วงความชื้นสูงและฝนตก',pre:'ตัดแต่งทรงพุ่มให้โปร่ง เก็บเศษใบและผลที่เป็นโรคทิ้ง',tr:'ตัดส่วนที่เป็นโรคและปรึกษาเจ้าหน้าที่เกษตรเรื่องสารป้องกันกำจัด',s:'doa'},
+{n:'โรคใบไหม้มะเขือเทศ',p:'มะเขือเทศ',sym:'จุดฉ่ำน้ำสีน้ำตาลบนใบและลำต้น ลามเร็วเมื่อชื้น',cause:'เชื้อราหรือโอโอไมซีท',pre:'ไม่รดน้ำโดนใบ เว้นระยะปลูก ปลูกหมุนเวียนพืช',tr:'ถอนทำลายต้นที่เป็นหนัก ปรึกษาเจ้าหน้าที่เกษตร',s:'doae'},
+{n:'โรคเหี่ยวเขียว',p:'มะเขือเทศ',sym:'ต้นเหี่ยวทั้งต้นขณะใบยังเขียว',cause:'เชื้อแบคทีเรียในดิน',pre:'ปรับ pH ดิน ปลูกหมุนเวียน ใช้ต้นตอทนทาน',tr:'ถอนต้นที่เป็นโรคและพักแปลง',s:'doa'},
+{n:'โรคกุ้งแห้งพริก',p:'พริก',sym:'ผลเหี่ยวแห้งมีสีซีดคล้ายกุ้งแห้ง',cause:'เชื้อรา สภาพชื้นสูง',pre:'เก็บผลที่เป็นโรคทิ้ง ตัดแต่งให้โปร่ง',tr:'ปรึกษาเจ้าหน้าที่เกษตรในพื้นที่',s:'doae'}];
+const ARTS=[
+{t:'การปรับปรุงดินด้วยอินทรีย์วัตถุ',c:'การปรับปรุงดิน',x:'การเติมปุ๋ยหมักหรือปุ๋ยคอกช่วยให้ดินร่วนซุยและเก็บน้ำได้ดีขึ้น ควรตรวจดินก่อนเพื่อเลือกวิธีให้เหมาะกับแปลง',s:'ldd'},
+{t:'หลักการเบื้องต้นของเกษตรอินทรีย์',c:'เกษตรอินทรีย์',x:'เน้นการใช้ปัจจัยจากธรรมชาติ ลดการใช้สารเคมีสังเคราะห์ และรักษาสมดุลของระบบนิเวศในแปลง',s:'doae'},
+{t:'การจัดการโรคพืชแบบผสมผสาน',c:'การจัดการโรคพืช',x:'ผสมผสานพันธุ์ต้านทาน การสำรวจแปลง การดูแลสุขอนามัย และใช้สารเมื่อจำเป็นตามคำแนะนำ',s:'doa'},
+{t:'เทคโนโลยี Smart Farm เบื้องต้น',c:'Smart Farm',x:'เซนเซอร์วัดความชื้นดินและระบบให้น้ำอัตโนมัติช่วยลดการใช้น้ำและแรงงาน เหมาะเริ่มจากระบบเล็กก่อน',s:'moac'},
+{t:'เทคนิคการให้น้ำพืชผัก',c:'เทคนิคการปลูกพืช',x:'ให้น้ำช่วงเช้าหรือเย็นเพื่อลดการระเหย และให้พอเหมาะกับระยะการเจริญเติบโต',s:'esc'},
+{t:'เกษตรสมัยใหม่กับการบันทึกข้อมูลแปลง',c:'เกษตรสมัยใหม่',x:'การบันทึกต้นทุน กิจกรรม และผลผลิตช่วยให้วางแผนฤดูถัดไปได้แม่นยำขึ้น',s:'nabc'}];
+const PRICE_SAMPLE=[['ข้าวเปลือกหอมมะลิ','พืชไร่','บาท/ตัน',[14000,14200,13800,14100,14400,14300]],['ข้าวโพดเลี้ยงสัตว์','พืชไร่','บาท/กก.',[9.5,9.7,9.6,9.9,10,9.8]],['มันสำปะหลัง','พืชไร่','บาท/กก.',[2.8,2.9,3,2.9,3.1,3]],['มะเขือเทศ','ผัก','บาท/กก.',[18,22,20,17,19,21]],['พริกขี้หนู','ผัก','บาท/กก.',[60,55,70,65,80,75]],['กล้วยน้ำว้า','ผลไม้','บาท/หวี',[25,25,28,26,27,30]]];
+const WSAMPLE={'ราชบุรี':['เมืองราชบุรี','โพธาราม','บ้านโป่ง'],'เชียงใหม่':['เมืองเชียงใหม่','สันทราย'],'ขอนแก่น':['เมืองขอนแก่น','น้ำพอง'],'สุราษฎร์ธานี':['เมืองสุราษฎร์ธานี','กาญจนดิษฐ์']};
+
+/* ---------- สถานะ ---------- */
+const S={user:DB.get('user',null),crops:DB.get('crops',[]),costs:DB.get('costs',[]),water:DB.get('water',[]),favs:DB.get('favs',[]),log:DB.get('log',[]),chat:[],plan:DB.get('plan',[])};
+const save=k=>DB.set(k,S[k]);
+const act=t=>{S.log.unshift({t,d:new Date().toLocaleString('th-TH')});S.log=S.log.slice(0,50);save('log')};
+
+const MENU_GROUPS=[
+  {title:'ภาพรวมและวิเคราะห์', items:[['home','ภาพรวม'],['weather','พยากรณ์อากาศ'],['disease','ตรวจสอบโรคพืช'],['soil','วิเคราะห์ดิน']]},
+  {title:'จัดการแปลงและต้นทุน', items:[['plan','ปฏิทินการเพาะปลูก'],['water','จัดการน้ำ'],['cost','คำนวณต้นทุน'],['price','ราคาสินค้าเกษตร']]},
+  {title:'คลังความรู้และผู้ช่วย', items:[['guide','คู่มือการเพาะปลูก'],['know','คลังความรู้'],['ai','ผู้ช่วย AI'],['me','บัญชีของฉัน']]}
+];
+
+/* กราฟ SVG ปรับปรุงใหม่ */
+const CHART=(vals,labels,color='var(--g2)')=>{
+  if(!vals.length)return'<div class="empty">ยังไม่มีข้อมูลสำหรับแสดงกราฟ</div>';
+  const m=Math.max(...vals,1),w=Math.max(320,vals.length*62);
+  const grid=[0.25,0.5,0.75,1].map(r=>`<line x1="8" y1="${132-r*105}" x2="${w-8}" y2="${132-r*105}" stroke="var(--line)" stroke-dasharray="3 3"/>`).join('');
+  return`<div class="sc" style="border:0"><svg viewBox="0 0 ${w} 172" width="100%" style="min-width:${w}px;display:block" role="img">
+    ${grid}
+    <line x1="8" y1="132" x2="${w-8}" y2="132" stroke="var(--line)" stroke-width="1.5"/>
+    ${vals.map((v,i)=>{
+      const h=Math.max(4,v/m*105);
+      const x=i*62+14;
+      return`<g>
+        <rect x="${x}" y="${132-h}" width="34" height="${h}" rx="7" fill="${color}"/>
+        <text x="${x+17}" y="${125-h}" font-size="11.5" font-weight="700" text-anchor="middle" fill="var(--ink)">${fmt(v)}</text>
+        <text x="${x+17}" y="154" font-size="11.5" text-anchor="middle" fill="var(--mut)">${esc(String(labels[i]).slice(0,8))}</text>
+      </g>`;
+    }).join('')}
+  </svg></div>`;
+};
+
+/* ---------- หน้าต่าง ๆ ---------- */
+const V={
+home(){
+  const act_=S.plan.filter(p=>p.date>=todayS()).sort((a,b)=>a.date>b.date?1:-1).slice(0,4);
+  const inc=S.costs.reduce((a,c)=>a+c.inc,0),exp=S.costs.reduce((a,c)=>a+c.total,0),net=inc-exp;
+  const wl=S.water.reduce((a,w)=>a+w.l,0);
+  const alertList=notes();
+  return`
+  <div class="page-hd">
+    <h2>สวัสดี${S.user?' คุณ'+esc(S.user.name):''} 🌱</h2>
+    <p class="s" style="margin:0">ภาพรวมแปลงเกษตรของคุณวันนี้ · ${new Date().toLocaleDateString('th-TH',{dateStyle:'full'})}</p>
+  </div>
+
+  <div class="g" style="margin-bottom:18px">
+    <div class="c stat-card">
+      <label>พืชที่กำลังปลูก</label>
+      <div class="big">${S.crops.filter(c=>c.status!=='เก็บเกี่ยวแล้ว').length} <small>รายการ</small></div>
+    </div>
+    <div class="c stat-card">
+      <label>รายรับ − ค่าใช้จ่ายสะสม</label>
+      <div class="big" style="color:${net<0?'var(--danger)':'var(--g2)'}">${fmt(net)} <small>บาท</small></div>
+    </div>
+    <div class="c stat-card">
+      <label>ปริมาณน้ำที่บันทึกไว้</label>
+      <div class="big">${fmt(wl)} <small>ลิตร</small></div>
+    </div>
+    <div class="c stat-card">
+      <label>การแจ้งเตือนวันนี้</label>
+      <div style="margin-top:6px">${alertList.length?alertList.map(n=>`<div style="font-size:15px;font-weight:600;margin-bottom:4px">🔔 ${n}</div>`).join(''):'<span style="color:var(--mut);font-size:15px">✓ ไม่มีงานค้างวันนี้</span>'}</div>
+    </div>
+  </div>
+
+  <div class="c" style="margin-bottom:18px">
+    <h3>
+      <span>แผนผังแปลงเพาะปลูก</span>
+      <a href="#plan" style="font-size:14.5px;font-weight:600">+ จัดการแปลง</a>
+    </h3>
+    ${S.crops.length?`<div class="plots">${S.crops.map(c=>{
+      const cls=c.status==='พร้อมเก็บเกี่ยว'?'h':c.status==='เก็บเกี่ยวแล้ว'?'done':'';
+      return`<div class="plot ${cls}">
+        <div><b>${esc(c.name)}</b><span>📍 ${esc(c.plot)}</span></div>
+        <div class="p-badge">${esc(c.status)}</div>
+      </div>`;
+    }).join('')}</div>`:'<div class="empty">ยังไม่มีข้อมูลแปลง — <a href="#plan">เพิ่มรายการปลูกพืช</a> เพื่อแสดงแผนผังแปลงของคุณ</div>'}
+  </div>
+
+  <div class="g2">
+    <div class="c">
+      <h3>กิจกรรมที่กำลังจะถึง</h3>
+      ${act_.length?act_.map(p=>`<div class="row"><span><b>${esc(p.type)}</b> · ${esc(p.crop)}</span><span class="tag">${p.date}</span></div>`).join(''):'<div class="empty">ยังไม่มีกิจกรรมที่นัดหมายไว้</div>'}
+    </div>
+    <div class="c">
+      <h3>รายจ่ายแต่ละรอบ (บาท)</h3>
+      ${CHART(S.costs.slice(-6).map(c=>c.total),S.costs.slice(-6).map(c=>c.name))}
+    </div>
+  </div>
+
+  <div class="c" style="margin-top:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <div>
+      <strong style="font-size:16.5px">ตรวจสอบสภาพอากาศและราคาสินค้าเกษตร</strong>
+      <p class="s" style="margin:2px 0 0;font-size:14.5px">ดูข้อมูลจำลองเพื่อวางแผนการให้น้ำและประเมินรายได้เบื้องต้น</p>
+    </div>
+    <div style="display:flex;gap:8px">
+      <a href="#weather"><button class="o sm">พยากรณ์อากาศ</button></a>
+      <a href="#price"><button class="o sm">ราคาสินค้าเกษตร</button></a>
+    </div>
+  </div>`;
+},
+
+weather(){return`
+  <div class="page-hd"><h2>พยากรณ์อากาศ</h2><p class="s" style="margin:0">ตรวจสอบแนวโน้มอุณหภูมิและโอกาสเกิดฝน</p></div>
+  ${NOTE('<b>ข้อมูลจำลอง</b> — หน้านี้เผยแพร่ในรูปแบบที่เชื่อมต่อ API ภายนอกไม่ได้ จึงแสดงตัวเลขตัวอย่างเพื่อทดลองใช้ ห้ามใช้ตัดสินใจจริง ดูพยากรณ์จริงที่ '+srcLink('tmd')+'. หากนำไปติดตั้งเอง ให้เชื่อมบริการสภาพอากาศ (เช่น Open-Meteo) ในฝั่งเซิร์ฟเวอร์')}
+  <div class="c">
+    <div class="g">
+      <div><label>จังหวัด</label><select id="wp">${Object.keys(WSAMPLE).map(p=>`<option>${p}</option>`).join('')}</select></div>
+      <div><label>อำเภอ</label><select id="wd"></select></div>
+    </div>
+    <div id="wout"></div>
+  </div>`},
+weatherInit(){
+  const fill=()=>{$('#wd').innerHTML=WSAMPLE[$('#wp').value].map(d=>`<option>${d}</option>`).join('');show()};
+  const show=()=>{
+    const seed=($('#wp').value+$('#wd').value).length;
+    const t=27+seed%7,rain=(seed*13)%90,hum=55+(seed*7)%40;
+    const days=['วันนี้','พรุ่งนี้','มะรืน','วันที่ 4','วันที่ 5'];
+    $('#wout').innerHTML=`
+      <p class="s" style="margin-top:4px">ข้อมูลตัวอย่าง (ไม่ใช่ข้อมูลจริง) · อัปเดตล่าสุด: ${new Date().toLocaleString('th-TH')}</p>
+      <div class="g" style="margin-bottom:16px">
+        <div class="c stat-card" style="background:var(--card-sub)"><label>อุณหภูมิ</label><div class="big">${t}°C</div></div>
+        <div class="c stat-card" style="background:var(--card-sub)"><label>โอกาสฝนตก</label><div class="big">${rain}%</div></div>
+        <div class="c stat-card" style="background:var(--card-sub)"><label>ความชื้นสัมพัทธ์</label><div class="big">${hum}%</div></div>
+      </div>
+      <h3>แนวโน้มโอกาสฝนตกรายวัน (%)</h3>
+      ${CHART(days.map((_,i)=>(rain+i*11)%100),days)}
+      <div class="note" style="margin-top:16px;margin-bottom:0">${rain>60?'🌧️ ฝนมีโอกาสตกมาก: ตรวจทางระบายน้ำ เลื่อนการใส่ปุ๋ย และเฝ้าระวังโรคราในแปลง':hum>80?'💧 ความชื้นสูง: เฝ้าระวังโรคจากเชื้อรา':'☀️ อากาศค่อนข้างแห้ง: ให้น้ำช่วงเช้าหรือเย็นและคลุมดินเพื่อรักษาความชื้น'}</div>`;
+  };
+  $('#wp').onchange=fill;$('#wd').onchange=show;fill();
+},
+
+disease(){return`
+  <div class="page-hd"><h2>ตรวจสอบโรคพืช</h2><p class="s" style="margin:0">ค้นหาอาการเบื้องต้นและแนวทางการป้องกัน</p></div>
+  ${NOTE('เป็นการค้นหาจากฐานข้อมูลโรคพืชเบื้องต้น <b>ไม่ใช่ผลวินิจฉัยจากผู้เชี่ยวชาญ</b> และ<b>ยังไม่มี AI วิเคราะห์ภาพจริง</b> รูปที่อัปโหลดใช้เพื่อเทียบด้วยตาของคุณเอง ควรปรึกษาเจ้าหน้าที่เกษตรในพื้นที่')}
+  <div class="c">
+    <div class="g">
+      <div><label>ประเภทพืช</label><select id="dc"><option value="">ทั้งหมด</option>${[...new Set(DIS.map(d=>d.p))].map(p=>`<option>${p}</option>`).join('')}</select></div>
+      <div><label>ค้นหาชื่อโรคหรืออาการ</label><input id="dq" placeholder="เช่น จุดดำ, ใบไหม้, เหี่ยว"></div>
+    </div>
+    <label>อัปโหลดรูปใบหรือผลผลิต (แสดงตัวอย่างในเครื่องคุณเท่านั้น)</label>
+    <input type="file" id="df" accept="image/*">
+    <img id="dimg" style="max-width:260px;border-radius:12px;display:none;margin-top:6px;border:1px solid var(--line)">
+  </div>
+  <div id="dout" style="margin-top:16px"></div>`},
+diseaseInit(){
+  const go=()=>{
+    const q=$('#dq').value.trim(),c=$('#dc').value;
+    const r=DIS.filter(d=>(!c||d.p===c)&&(!q||(d.n+d.sym).includes(q)));
+    $('#dout').innerHTML=r.length?r.map(d=>`
+      <div class="c" style="margin-bottom:12px">
+        <h3><span>${d.n}</span> <span class="tag">${d.p}</span></h3>
+        <p style="margin:6px 0"><b>อาการ:</b> ${d.sym}</p>
+        <p style="margin:6px 0"><b>สาเหตุที่อาจเป็นไปได้:</b> ${d.cause}</p>
+        <p style="margin:6px 0"><b>การป้องกัน:</b> ${d.pre}</p>
+        <p style="margin:6px 0"><b>แนวทางดูแล:</b> ${d.tr}</p>
+        ${ref(d.s)}
+      </div>`).join(''):'<div class="empty">ไม่พบโรคที่ตรงกับคำค้น ลองใช้คำอื่น หรือปรึกษาเจ้าหน้าที่เกษตร</div>';
+  };
+  $('#dq').oninput=go;$('#dc').onchange=go;
+  $('#df').onchange=e=>{
+    const f=e.target.files[0];if(!f)return;
+    if(!f.type.startsWith('image/'))return toast('กรุณาเลือกไฟล์รูปภาพ');
+    if(f.size>5e6)return toast('ไฟล์ใหญ่เกิน 5 MB');
+    const i=$('#dimg');i.src=URL.createObjectURL(f);i.style.display='block';
+  };
+  go();
+},
+
+soil(){return`
+  <div class="page-hd"><h2>วิเคราะห์ดิน</h2><p class="s" style="margin:0">ประเมินสภาพดินเบื้องต้นจากค่าตรวจวัด</p></div>
+  ${NOTE('เป็นการประเมินเบื้องต้นจากค่าที่คุณกรอกเท่านั้น หากไม่มีผลตรวจจริง ให้เว้นว่างไว้ ระบบจะไม่สร้างค่าขึ้นเอง ควรตรวจดินกับ '+srcLink('ldd'))}
+  <div class="c">
+    <div class="g">
+      <div><label>ประเภทดิน</label><select id="st"><option>ดินเหนียว</option><option>ดินร่วน</option><option>ดินทราย</option></select></div>
+      <div><label>ค่า pH (3–10)</label><input id="sp" type="number" step="0.1" placeholder="เช่น 6.5"></div>
+      <div><label>ความชื้น (%)</label><input id="sm" type="number" placeholder="เช่น 45"></div>
+      <div><label>อินทรียวัตถุ (%) ถ้ามีผลตรวจ</label><input id="so" type="number" step="0.1" placeholder="เช่น 2.0"></div>
+    </div>
+    <button id="sgo">วิเคราะห์สภาพดิน</button>
+    <div id="sout" class="err"></div>
+  </div>`},
+soilInit(){
+  $('#sgo').onclick=()=>{
+    const ph=$('#sp').value,m=$('#sm').value,o=$('#so').value,t=$('#st').value,out=$('#sout');
+    if(ph===''&&m===''&&o==='')return out.textContent='กรุณากรอกอย่างน้อยหนึ่งค่า';
+    if(ph!==''&&(ph<3||ph>10))return out.textContent='ค่า pH ต้องอยู่ระหว่าง 3 ถึง 10';
+    if(m!==''&&(m<0||m>100))return out.textContent='ความชื้นต้องอยู่ระหว่าง 0 ถึง 100';
+    if(o!==''&&(o<0||o>100))return out.textContent='อินทรียวัตถุต้องอยู่ระหว่าง 0 ถึง 100';
+    const r=[];
+    if(ph!==''){const p=+ph;r.push(p<5.5?`pH ${p}: ดินเป็นกรดค่อนข้างมาก ควรพิจารณาปูนปรับสภาพดินตามคำแนะนำเจ้าหน้าที่`:p>7.5?`pH ${p}: ดินค่อนไปทางด่าง ควรเติมอินทรียวัตถุ`:`pH ${p}: อยู่ในช่วงเหมาะกับพืชส่วนใหญ่`)}
+    if(m!=='')r.push(+m<30?'ดินค่อนข้างแห้ง ควรให้น้ำและคลุมดิน':+m>80?'ดินชื้นมาก ระวังน้ำขังและโรคราก':'ความชื้นอยู่ในระดับพอใช้');
+    if(o!=='')r.push(+o<1.5?'อินทรียวัตถุต่ำ ควรเติมปุ๋ยหมักหรือปุ๋ยคอก':'อินทรียวัตถุอยู่ในระดับที่ยอมรับได้');
+    r.push({ดินเหนียว:'ดินเหนียวเก็บน้ำดี เหมาะกับข้าว ควรระวังการอัดแน่น',ดินร่วน:'ดินร่วนเหมาะกับพืชส่วนใหญ่ เช่น ผัก ข้าวโพด พริก',ดินทราย:'ดินทรายระบายน้ำเร็ว เหมาะกับมันสำปะหลัง ควรเพิ่มอินทรียวัตถุ'}[t]);
+    out.className='';
+    out.innerHTML=`<div class="note" style="margin-top:16px;margin-bottom:0">${r.map(x=>'• '+x).join('<br>')}</div>`;
+  };
+},
+
+guide(){return`
+  <div class="page-hd"><h2>คู่มือการเพาะปลูก</h2><p class="s" style="margin:0">เลือกชนิดพืชเพื่อดูรายละเอียดขั้นตอนการดูแลทั้ง 10 หัวข้อ</p></div>
+  <div class="c">
+    <div class="crop-grid">
+      ${CROPLIST.map(c=>`<button class="crop-btn ${CROPS[c]?'':'o'}" data-c="${c}"><span>${c}</span><small style="opacity:.8">${CROPS[c]?'ดูคู่มือ →':'เร็วๆ นี้'}</small></button>`).join('')}
+    </div>
+  </div>
+  <div id="gout" style="margin-top:16px"></div>`},
+guideInit(){
+  document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{
+    const c=CROPS[b.dataset.c];
+    $('#gout').innerHTML=c?`
+      <div class="c">
+        <h3><span>🌱 คู่มือการปลูก${b.dataset.c}</span><span class="tag">10 หัวข้อหลัก</span></h3>
+        ${GL.map(([k,l],i)=>`<div class="row" style="justify-content:flex-start;align-items:flex-start;gap:8px"><span><b>${i+1}. ${l}:</b> ${c[k]}</span></div>`).join('')}
+        ${ref(...c.s)}
+      </div>`:`<div class="empty">ยังไม่มีข้อมูลของ${b.dataset.c}ที่ตรวจสอบแล้ว จึงไม่แสดงข้อมูลที่ไม่มีแหล่งรองรับ ดูข้อมูลได้ที่ ${srcLink('doae')}</div>`;
+    $('#gout').scrollIntoView({behavior:'smooth',block:'nearest'});
+  });
+},
+
+cost(){return`
+  <div class="page-hd"><h2>คำนวณต้นทุน</h2><p class="s" style="margin:0">บันทึกค่าใช้จ่ายและเปรียบเทียบกำไร-ขาดทุนต่อไร่</p></div>
+  <div class="c">
+    <h3>กรอกข้อมูลรอบการปลูก</h3>
+    <label>ชื่อรอบการปลูก</label>
+    <input id="cn" placeholder="เช่น ข้าวนาปี แปลงริมคลอง">
+    <div class="g">
+      ${[['seed','ค่าเมล็ดพันธุ์'],['fert','ค่าปุ๋ย'],['wat','ค่าน้ำ'],['elec','ค่าไฟฟ้า'],['lab','ค่าแรง'],['eq','ค่าอุปกรณ์'],['inc','รายรับจากการขาย'],['area','พื้นที่ (ไร่)']].map(([k,l])=>`<div><label>${l}${k==='inc'||k==='area'?'':' (บาท)'}</label><input id="c_${k}" type="number" min="0" step="any" placeholder="0"></div>`).join('')}
+    </div>
+    <button id="cgo">คำนวณและบันทึก</button>
+    <div id="cerr" class="err"></div>
+  </div>
+  <div class="c" style="margin-top:18px">
+    <h3>ประวัติการคำนวณ</h3>
+    ${S.costs.length?`
+      <div class="sc" style="margin-bottom:16px">
+        <table>
+          <tr><th>รอบการปลูก</th><th>ต้นทุนรวม</th><th>รายรับ</th><th>กำไร / ขาดทุน</th><th>ต้นทุน/ไร่</th><th></th></tr>
+          ${S.costs.map(c=>{
+            const diff=c.inc-c.total;
+            return`<tr>
+              <td><b>${esc(c.name)}</b></td>
+              <td>${fmt(c.total)}</td>
+              <td>${fmt(c.inc)}</td>
+              <td style="font-weight:700;color:${diff<0?'var(--danger)':'var(--g2)'}">${diff>0?'+':''}${fmt(diff)}</td>
+              <td>${fmt(c.total/c.area)}</td>
+              <td style="text-align:right"><button class="d" data-del="${c.id}">ลบ</button></td>
+            </tr>`;
+          }).join('')}
+        </table>
+      </div>
+      <h3>กราฟเปรียบเทียบกำไร / ขาดทุน (บาท)</h3>
+      ${CHART(S.costs.slice(-6).map(c=>c.inc-c.total),S.costs.slice(-6).map(c=>c.name))}`:'<div class="empty">ยังไม่มีประวัติ กรอกข้อมูลด้านบนเพื่อเริ่มคำนวณ</div>'}
+  </div>`},
+costInit(){
+  $('#cgo').onclick=()=>{
+    const g=k=>$('#c_'+k).value,n=$('#cn').value.trim(),e=$('#cerr');
+    const ks=['seed','fert','wat','elec','lab','eq','inc','area'];
+    if(!n)return e.textContent='กรุณาใส่ชื่อรอบการปลูก';
+    for(const k of ks)if(g(k)!==''&&(isNaN(g(k))||+g(k)<0))return e.textContent='กรุณากรอกตัวเลขที่ไม่ติดลบ';
+    if(!(+g('area')>0))return e.textContent='พื้นที่ต้องมากกว่า 0 ไร่';
+    const v=k=>+g(k)||0,total=['seed','fert','wat','elec','lab','eq'].reduce((a,k)=>a+v(k),0);
+    S.costs.push({id:uid(),name:n,total,inc:v('inc'),area:v('area')});
+    save('costs');act('คำนวณต้นทุน: '+n);toast('บันทึกข้อมูลต้นทุนแล้ว');route();
+  };
+  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
+    S.costs=S.costs.filter(c=>c.id!==b.dataset.del);save('costs');toast('ลบรายการแล้ว');route();
+  });
+},
+
+price(){return`
+  <div class="page-hd"><h2>ราคาสินค้าเกษตร</h2><p class="s" style="margin:0">ติดตามแนวโน้มราคาสินค้าเกษตรย้อนหลัง</p></div>
+  ${NOTE('<b>ข้อมูลจำลอง ไม่ใช่ราคาตลาดปัจจุบัน</b> — ใช้เพื่อทดลองระบบเท่านั้น ตรวจราคาจริงที่ '+srcLink('nabc')+' หรือ '+srcLink('moac'))}
+  <div class="c">
+    <div class="g">
+      <div><label>ค้นหาสินค้า</label><input id="pq" placeholder="พิมพ์ชื่อพืช..."></div>
+      <div><label>ประเภทสินค้า</label><select id="pc"><option value="">ทั้งหมด</option><option>พืชไร่</option><option>ผัก</option><option>ผลไม้</option></select></div>
+    </div>
+  </div>
+  <div id="pout" style="margin-top:16px"></div>`},
+priceInit(){
+  const go=()=>{
+    const q=$('#pq').value.trim(),c=$('#pc').value;
+    const r=PRICE_SAMPLE.filter(p=>(!c||p[1]===c)&&(!q||p[0].includes(q)));
+    $('#pout').innerHTML=r.length?`<div class="g2">${r.map(p=>`
+      <div class="c">
+        <h3><span>${p[0]}</span> <span class="tag">${p[1]}</span></h3>
+        <div class="big">${fmt(p[3][5])} <small>${p[2]}</small></div>
+        <label style="margin-top:6px">ตัวอย่างราคาย้อนหลัง 6 งวด · ข้อมูลจำลอง</label>
+        ${CHART(p[3],['งวด 1','งวด 2','งวด 3','งวด 4','งวด 5','งวด 6'])}
+      </div>`).join('')}</div>`:'<div class="empty">ไม่พบสินค้าที่ค้นหา</div>';
+  };
+  $('#pq').oninput=go;$('#pc').onchange=go;go();
+},
+
+plan(){
+  const crops=S.crops;
+  return`
+  <div class="page-hd"><h2>ปฏิทินการเพาะปลูก</h2><p class="s" style="margin:0">วางแผนรอบการปลูกและตั้งแจ้งเตือนกิจกรรมในแปลง</p></div>
+  <div class="c">
+    <h3>เพิ่มรายการปลูกพืชใหม่</h3>
+    <div class="g">
+      <div><label>ชื่อพืช</label><input id="pn" list="cl" placeholder="เลือกหรือพิมพ์ชื่อพืช"><datalist id="cl">${CROPLIST.map(c=>`<option>${c}`).join('')}</datalist></div>
+      <div><label>ชื่อแปลง</label><input id="pp" placeholder="เช่น แปลง A1"></div>
+      <div><label>วันเริ่มปลูก</label><input type="date" id="pd"></div>
+      <div><label>วันเก็บเกี่ยว (คาดการณ์)</label><input type="date" id="ph"></div>
+    </div>
+    <button id="pg">+ เพิ่มรายการพืช</button>
+    <div id="perr" class="err"></div>
+  </div>
+
+  <div class="c" style="margin-top:18px">
+    <h3>แปลงของฉัน (${crops.length})</h3>
+    ${crops.length?crops.map(c=>`
+      <div class="row">
+        <div>
+          <strong style="font-size:17px">${esc(c.name)}</strong> · <span style="color:var(--mut)">${esc(c.plot)}</span>
+          <div style="font-size:14.5px;color:var(--mut)">ปลูก: ${c.start} → เก็บเกี่ยว: ${c.harvest}</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <select data-st="${c.id}" style="width:auto;margin:0;padding:6px 10px;font-size:14.5px">
+            ${['กำลังเพาะปลูก','พร้อมเก็บเกี่ยว','เก็บเกี่ยวแล้ว'].map(s=>`<option ${s===c.status?'selected':''}>${s}</option>`).join('')}
+          </select>
+          <button class="d" data-dc="${c.id}">ลบ</button>
+        </div>
+      </div>`).join(''):'<div class="empty">ยังไม่มีรายการแปลง เพิ่มพืชด้านบนได้เลย</div>'}
+  </div>
+
+  <div class="c" style="margin-top:18px">
+    <h3>บันทึกกิจกรรม / ตั้งแจ้งเตือน</h3>
+    <div class="g">
+      <div><label>เลือกพืช</label><select id="ac">${crops.map(c=>`<option>${esc(c.name)}</option>`).join('')||'<option value="">— เพิ่มพืชก่อน —</option>'}</select></div>
+      <div><label>ประเภทกิจกรรม</label><select id="at"><option>ให้น้ำ</option><option>ใส่ปุ๋ย</option><option>เก็บเกี่ยว</option></select></div>
+      <div><label>วันที่นัดหมาย</label><input type="date" id="ad"></div>
+    </div>
+    <button id="ag">บันทึกกิจกรรม</button>
+    <div id="aerr" class="err"></div>
+    <div style="margin-top:16px">
+      ${S.plan.sort((a,b)=>a.date>b.date?1:-1).map(p=>`
+        <div class="row">
+          <span><span class="tag" style="margin-right:6px">${p.date}</span> <b>${esc(p.type)}</b> · ${esc(p.crop)}</span>
+          <button class="d" data-dp="${p.id}">ลบ</button>
+        </div>`).join('')||'<div class="empty">ยังไม่มีกิจกรรมที่บันทึกไว้</div>'}
+    </div>
+  </div>`;
+},
+planInit(){
+  $('#pg').onclick=()=>{
+    const n=$('#pn').value.trim(),p=$('#pp').value.trim(),d=$('#pd').value,h=$('#ph').value,e=$('#perr');
+    if(!n||!p||!d||!h)return e.textContent='กรุณากรอกข้อมูลให้ครบทุกช่อง';
+    if(h<=d)return e.textContent='วันเก็บเกี่ยวต้องอยู่หลังวันเริ่มปลูก';
+    S.crops.push({id:uid(),name:n,plot:p,start:d,harvest:h,status:'กำลังเพาะปลูก'});
+    S.plan.push({id:uid(),crop:n,type:'เก็บเกี่ยว',date:h});
+    save('crops');save('plan');act('เพิ่มพืช: '+n);toast('เพิ่มรายการพืชแล้ว');route();
+  };
+  $('#ag').onclick=()=>{
+    const c=$('#ac').value,d=$('#ad').value;
+    if(!c||!d)return $('#aerr').textContent='กรุณาเลือกพืชและวันที่';
+    S.plan.push({id:uid(),crop:c,type:$('#at').value,date:d});
+    save('plan');toast('บันทึกกิจกรรมแล้ว');route();
+  };
+  document.querySelectorAll('[data-st]').forEach(s=>s.onchange=()=>{
+    S.crops.find(c=>c.id===s.dataset.st).status=s.value;save('crops');toast('อัปเดตสถานะแล้ว');route();
+  });
+  document.querySelectorAll('[data-dc]').forEach(b=>b.onclick=()=>{
+    S.crops=S.crops.filter(c=>c.id!==b.dataset.dc);save('crops');toast('ลบแปลงแล้ว');route();
+  });
+  document.querySelectorAll('[data-dp]').forEach(b=>b.onclick=()=>{
+    S.plan=S.plan.filter(c=>c.id!==b.dataset.dp);save('plan');route();
+  });
+},
+
+water(){return`
+  <div class="page-hd"><h2>จัดการน้ำ</h2><p class="s" style="margin:0">บันทึกปริมาณการให้น้ำในแต่ละแปลง</p></div>
+  <div class="c">
+    <h3>บันทึกการให้น้ำ</h3>
+    <div class="g">
+      <div><label>ปริมาณน้ำ (ลิตร)</label><input id="wl" type="number" min="0" placeholder="เช่น 500"></div>
+      <div><label>แปลง / ชนิดพืช</label><input id="wn" placeholder="เช่น แปลงผักบุ้ง"></div>
+      <div><label>วันที่ให้น้ำ</label><input id="wdt" type="date" value="${todayS()}"></div>
+    </div>
+    <button id="wg">บันทึกการให้น้ำ</button>
+    <div id="werr" class="err"></div>
+  </div>
+  <div class="g2" style="margin-top:18px">
+    <div class="c">
+      <h3>ประวัติการให้น้ำล่าสุด</h3>
+      ${S.water.length?S.water.slice().reverse().slice(0,8).map(w=>`
+        <div class="row">
+          <span><span class="tag" style="margin-right:6px">${w.d}</span> ${esc(w.n)} · <b>${fmt(w.l)} ลิตร</b></span>
+          <button class="d" data-dw="${w.id}">ลบ</button>
+        </div>`).join(''):'<div class="empty">ยังไม่มีบันทึกการให้น้ำ</div>'}
+    </div>
+    <div class="c">
+      <h3>กราฟปริมาณน้ำล่าสุด (ลิตร)</h3>
+      ${CHART(S.water.slice(-6).map(w=>w.l),S.water.slice(-6).map(w=>w.d.slice(5)))}
+    </div>
+  </div>
+  <div class="c" style="margin-top:18px">
+    <h3>💡 แนวทางประหยัดน้ำในแปลง</h3>
+    <p style="margin:6px 0">• ให้น้ำช่วงเช้าหรือเย็นเพื่อลดการระเหย • คลุมดินด้วยฟางหรือเศษพืชเพื่อรักษาความชื้น • ช่วงฝน ตรวจทางระบายน้ำและงดให้น้ำเพิ่ม • ช่วงแล้ง เลือกให้น้ำเป็นหยดหรือเฉพาะโคนต้น</p>
+    <p style="margin:8px 0 0;font-size:14.5px;color:var(--mut)">ข้อมูลสถานการณ์น้ำจริง ดูที่ ${srcLink('moac')} และ ${srcLink('tmd')}</p>
+  </div>`},
+waterInit(){
+  $('#wg').onclick=()=>{
+    const l=+$('#wl').value,n=$('#wn').value.trim(),d=$('#wdt').value;
+    if(!(l>0)||!n||!d)return $('#werr').textContent='กรุณากรอกปริมาณน้ำมากกว่า 0 ชื่อแปลง และวันที่';
+    S.water.push({id:uid(),l,n,d});save('water');act('บันทึกน้ำ '+l+' ลิตร');toast('บันทึกการให้น้ำแล้ว');route();
+  };
+  document.querySelectorAll('[data-dw]').forEach(b=>b.onclick=()=>{
+    S.water=S.water.filter(w=>w.id!==b.dataset.dw);save('water');route();
+  });
+},
+
+know(){return`
+  <div class="page-hd"><h2>คลังความรู้</h2><p class="s" style="margin:0">บทความสาระน่ารู้ด้านการเกษตรและเทคโนโลยี</p></div>
+  <div class="c">
+    <div class="g">
+      <div><label>ค้นหาบทความ</label><input id="kq" placeholder="พิมพ์คำค้นหา..."></div>
+      <div><label>หมวดหมู่</label><select id="kc"><option value="">ทั้งหมด</option>${[...new Set(ARTS.map(a=>a.c))].map(c=>`<option>${c}</option>`).join('')}</select></div>
+    </div>
+  </div>
+  <div id="kout" style="margin-top:16px"></div>`},
+knowInit(){
+  const go=()=>{
+    const q=$('#kq').value.trim(),c=$('#kc').value;
+    const r=ARTS.filter(a=>(!c||a.c===c)&&(!q||(a.t+a.x).includes(q)));
+    $('#kout').innerHTML=r.length?r.map(a=>{
+      const isFav=S.favs.includes(a.t);
+      return`<div class="c" style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap">
+          <div>
+            <span class="tag" style="margin-bottom:8px">${a.c}</span>
+            <h3 style="margin-bottom:6px">${a.t}</h3>
+          </div>
+          <button class="${isFav?'':'o'} sm" data-fv="${a.t}">${isFav?'★ บันทึกแล้ว':'☆ บันทึกโปรด'}</button>
+        </div>
+        <p style="margin:4px 0">${a.x}</p>
+        ${ref(a.s)}
+      </div>`;
+    }).join(''):'<div class="empty">ไม่พบบทความที่ค้นหา</div>';
+    document.querySelectorAll('[data-fv]').forEach(b=>b.onclick=()=>{
+      const t=b.dataset.fv;
+      S.favs=S.favs.includes(t)?S.favs.filter(x=>x!==t):[...S.favs,t];
+      save('favs');toast(S.favs.includes(t)?'บันทึกในรายการโปรดแล้ว':'นำออกจากรายการโปรดแล้ว');go();
+    });
+  };
+  $('#kq').oninput=go;$('#kc').onchange=go;go();
+},
+
+ai(){return`
+  <div class="page-hd"><h2>ผู้ช่วย AI ด้านการเกษตร</h2><p class="s" style="margin:0">สอบถามข้อสงสัยเรื่องการเพาะปลูก ดิน น้ำ และโรคพืช</p></div>
+  ${NOTE('ผู้ช่วยนี้เชื่อมต่อ <b>Claude</b> ผ่านบัญชี claude.ai ของผู้เปิดหน้านี้ (ครั้งแรกจะขอสิทธิ์) ไม่ต้องใส่ API Key หากไม่ได้รับสิทธิ์จะใช้ชุดคำถามตัวอย่างแทน คำตอบจาก AI อาจคลาดเคลื่อน ไม่ใช่คำแนะนำจากผู้เชี่ยวชาญ ควรตรวจสอบกับเจ้าหน้าที่เกษตรในพื้นที่')}
+  <div class="c">
+    <div id="chat" class="chat-box">
+      ${S.chat.map(m=>`<div class="bub ${m.r}">${m.t}</div>`).join('')||'<div class="empty" style="margin:auto;border:0;background:transparent">เลือกคำถามตัวอย่างด้านล่าง หรือพิมพ์คำถามของคุณเพื่อเริ่มสนทนา</div>'}
+    </div>
+    <label>คำถามแนะนำ</label>
+    <div class="chips">
+      ${['ปลูกข้าวต้องเตรียมดินอย่างไร','ใบมะม่วงมีจุดดำเกิดจากอะไร','ดินแบบไหนเหมาะกับการปลูกผัก','ควรรดน้ำต้นไม้ช่วงเวลาไหน','มีวิธีลดต้นทุนการเพาะปลูกอย่างไร'].map(q=>`<button class="o" data-q="${q}">${q}</button>`).join('')}
+    </div>
+    <div class="chat-in">
+      <input id="aq" placeholder="พิมพ์คำถามด้านการเกษตรที่นี่...">
+      <button id="ag2">ส่งคำถาม</button>
+    </div>
+  </div>`},
+aiInit(){
+  const box=$('#chat');if(box)box.scrollTop=box.scrollHeight;
+  const A=[['ข้าว',CROPS['ข้าว'].d+' (อ้างอิงคู่มือในระบบ)','doa'],['มะม่วง','อาจเป็นโรคแอนแทรคโนส ซึ่งเกิดจากเชื้อรา ดูรายละเอียดที่หน้าตรวจสอบโรคพืช','doa'],['ผัก','ดินร่วนปนทราย ระบายน้ำดี มีอินทรียวัตถุสูง','doae'],['รด','ช่วงเช้าหรือเย็นเพื่อลดการระเหย','esc'],['ต้นทุน','บันทึกต้นทุนทุกรอบเพื่อเปรียบเทียบ ใช้ปุ๋ยตามผลตรวจดิน และใช้น้ำอย่างประหยัด','doae']];
+  const askLocal=q=>{
+    if(!q.trim())return;
+    const h=A.find(a=>q.includes(a[0]));
+    S.chat.push({r:'u',t:esc(q)},{r:'a',t:h?`${esc(h[1])}<br><small style="opacity:.8">แหล่งอ้างอิง: ${srcLink(h[2])}</small>`:'ยังไม่มีคำตอบสำหรับคำถามนี้ในโหมดตัวอย่าง ลองถามเกี่ยวกับ ข้าว มะม่วง ผัก รดน้ำ หรือต้นทุน'});
+    act('ถามผู้ช่วย: '+q.slice(0,30));route();
+  };
+  const ask=async q=>{
+    q=q.trim();if(!q||window.__aiBusy)return;
+    let sm=null;try{sm=await claude.use('sample')}catch(e){}
+    if(!sm)return askLocal(q);
+    const hist=S.chat.filter(m=>m.raw).slice(-6).map(m=>(m.r==='u'?'ผู้ใช้: ':'ผู้ช่วย: ')+m.raw).join('\n');
+    const prompt='คุณคือผู้ช่วยด้านการเกษตรไทยในเว็บ Smart Farm Hub ตอบเป็นภาษาไทย ภาษาง่าย กระชับ เหมาะกับเกษตรกรและผู้สูงอายุ ห้ามแต่งตัวเลข สถิติ หรือลิงก์ขึ้นเอง หากไม่แน่ใจให้บอกตรง ๆ และแนะนำให้ปรึกษาเจ้าหน้าที่เกษตรในพื้นที่ เรื่องโรคพืชให้บอกว่าเป็นการประเมินเบื้องต้น เรื่องสารเคมีให้แนะนำให้ปรึกษาเจ้าหน้าที่และใช้ตามฉลาก ท้ายคำตอบให้ระบุหน่วยงานที่ควรตรวจสอบเพิ่มเติม (เช่น กรมส่งเสริมการเกษตร กรมวิชาการเกษตร กรมพัฒนาที่ดิน กรมอุตุนิยมวิทยา) เฉพาะที่เกี่ยวข้อง\n\nประวัติสนทนา:\n'+hist+'\n\nคำถามใหม่: '+q;
+    window.__aiBusy=true;
+    const u={r:'u',t:esc(q),raw:q},a={r:'a',t:'กำลังคิดคำตอบ…'};
+    S.chat.push(u,a);route();
+    try{
+      const r=await sm(prompt,{cache:false,modelTier:'quick'});
+      a.raw=r.text;
+      a.t=esc(r.text).replace(/\n/g,'<br>')+'<br><small style="opacity:.8">คำตอบจาก AI (Claude) อาจคลาดเคลื่อน ควรตรวจสอบกับแหล่งอ้างอิงทางการ</small>';
+      act('ถาม AI: '+q.slice(0,30));
+    }catch(e){
+      S.chat.splice(S.chat.indexOf(u),2);
+      window.__aiBusy=false;
+      if(e&&e.code==='not_granted'){toast('ไม่ได้อนุญาตใช้ AI จึงใช้โหมดตัวอย่างแทน');return askLocal(q)}
+      S.chat.push(u,{r:'a',t:e&&e.code==='rate_limited'?'ถามถี่เกินไป กรุณารอสักครู่แล้วลองใหม่':'เชื่อมต่อ AI ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง'});
+      return route();
+    }
+    window.__aiBusy=false;route();
+  };
+  $('#ag2').onclick=()=>ask($('#aq').value);
+  $('#aq').onkeydown=e=>{if(e.key==='Enter')ask($('#aq').value)};
+  document.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>ask(b.dataset.q));
+},
+
+me(){
+  const u=S.user;
+  if(!u)return`
+  <div class="page-hd"><h2>บัญชีของฉัน</h2><p class="s" style="margin:0">จัดการข้อมูลผู้ใช้งานและดูประวัติกิจกรรม</p></div>
+  ${NOTE('ระบบสมาชิกนี้เป็น<b>ระบบทดลองที่เก็บในเครื่องนี้เท่านั้น</b> ไม่มีเซิร์ฟเวอร์ และไม่ปลอดภัยพอสำหรับข้อมูลจริง ห้ามใช้รหัสผ่านที่ใช้กับบริการอื่น หากนำไปใช้จริงให้เชื่อม Supabase หรือ Firebase')}
+  <div class="c">
+    <h3>สมัครสมาชิก / เข้าสู่ระบบ</h3>
+    <div class="g">
+      <div><label>ชื่อผู้ใช้งาน</label><input id="un" placeholder="เช่น ลุงสมชาย"></div>
+      <div><label>อีเมล</label><input id="ue" type="email" placeholder="name@example.com"></div>
+      <div><label>รหัสผ่าน (อย่างน้อย 6 ตัว)</label><input id="up" type="password" placeholder="••••••"></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button id="ur">สมัครสมาชิกและเข้าสู่ระบบ</button>
+      <button class="o" id="ul">เข้าสู่ระบบ</button>
+    </div>
+    <div id="uerr" class="err"></div>
+  </div>`;
+
+  return`
+  <div class="page-hd"><h2>บัญชีของฉัน</h2><p class="s" style="margin:0">จัดการข้อมูลส่วนตัวและดูบันทึกการใช้งาน</p></div>
+  <div class="c">
+    <h3>ข้อมูลโปรไฟล์</h3>
+    <div class="g">
+      <div><label>ชื่อ</label><input id="un" value="${esc(u.name)}"></div>
+      <div><label>แปลงเกษตรหลัก</label><input id="uf" value="${esc(u.farm||'')}" placeholder="เช่น สวนทุเรียน จันทบุรี"></div>
+      <div><label>พืชที่สนใจ</label><input id="ui" value="${esc(u.like||'')}" placeholder="เช่น ข้าว, พริก, มะเขือเทศ"></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button id="us">บันทึกข้อมูล</button>
+      <button class="o" id="uo">ออกจากระบบ</button>
+    </div>
+  </div>
+  <div class="g2" style="margin-top:18px">
+    <div class="c">
+      <h3>บทความโปรด (${S.favs.length})</h3>
+      ${S.favs.length?S.favs.map(f=>`<div class="row"><span>★ ${esc(f)}</span></div>`).join(''):'<div class="empty">ยังไม่มีบทความที่บันทึกไว้</div>'}
+    </div>
+    <div class="c">
+      <h3>ประวัติการใช้งานล่าสุด</h3>
+      ${S.log.length?S.log.slice(0,8).map(l=>`<div class="row"><span>${esc(l.t)}</span><small style="color:var(--mut)">${l.d}</small></div>`).join(''):'<div class="empty">ยังไม่มีประวัติการใช้งาน</div>'}
+    </div>
+  </div>`;
+},
+meInit(){
+  const u=S.user;
+  if(u){
+    $('#us').onclick=()=>{
+      const n=$('#un').value.trim();if(!n)return toast('กรุณาใส่ชื่อ');
+      S.user={...u,name:n,farm:$('#uf').value,like:$('#ui').value};
+      DB.set('user',S.user);toast('บันทึกข้อมูลโปรไฟล์แล้ว');route();
+    };
+    $('#uo').onclick=()=>{
+      S.user=null;DB.set('acct_session',0);localStorage.removeItem('sfh_user');toast('ออกจากระบบแล้ว');route();
+    };
+    return;
+  }
+  const chk=()=>{
+    const n=$('#un').value.trim(),e=$('#ue').value.trim(),p=$('#up').value;
+    if(!/^\S+@\S+\.\S+$/.test(e)){$('#uerr').textContent='รูปแบบอีเมลไม่ถูกต้อง';return null}
+    if(p.length<6){$('#uerr').textContent='รหัสผ่านสั้นเกินไป (ต้องมีอย่างน้อย 6 ตัว)';return null}
+    return{n,e,p};
+  };
+  $('#ur').onclick=()=>{
+    const v=chk();if(!v)return;
+    if(!v.n)return $('#uerr').textContent='กรุณาใส่ชื่อ';
+    S.user={name:v.n,email:v.e,farm:'',like:''};
+    DB.set('user',S.user);DB.set('pw',btoa(unescape(encodeURIComponent(v.p))));
+    toast('สมัครสมาชิกสำเร็จ');route();
+  };
+  $('#ul').onclick=()=>{
+    const v=chk();if(!v)return;
+    $('#uerr').textContent='ไม่พบบัญชีนี้ในเครื่อง กรุณาสมัครสมาชิกก่อน';
+  };
+}
+};
+
+function notes(){
+  const n=[],t=todayS();
+  S.plan.filter(p=>p.date===t).forEach(p=>n.push(`วันนี้: ${esc(p.type)} ${esc(p.crop)}`));
+  S.crops.filter(c=>c.harvest<=t&&c.status==='กำลังเพาะปลูก').forEach(c=>n.push(`${esc(c.name)} ถึงกำหนดเก็บเกี่ยว`));
+  return n;
+}
+
+function renderNav(activeKey='home'){
+  const cur=document.documentElement.getAttribute('data-theme');
+  const isDark=cur==='dark'||(!cur&&matchMedia('(prefers-color-scheme:dark)').matches);
+  $('#nav').innerHTML=`
+    <div class="brand">
+      <div class="brand-icon">🌾</div>
+      <div>
+        <h1>Smart Farm Hub</h1>
+        <small class="sub">ผู้ช่วยจัดการงานเกษตร</small>
+      </div>
+    </div>
+    ${MENU_GROUPS.map(g=>`
+      <div class="nav-grp">${g.title}</div>
+      ${g.items.map(([h,l])=>`<a href="#${h}" class="${h===activeKey?'on':''}">${ICONS[h]||''}<span>${l}</span></a>`).join('')}
+    `).join('')}
+    <div class="nav-foot">
+      <button type="button" class="theme-btn" id="tbtn">${isDark?'☀️ โหมดสว่าง':'🌙 โหมดมืด'}</button>
+      <small style="color:#8ab899;font-size:12px;text-align:center">ข้อมูลเก็บในเบราว์เซอร์เครื่องนี้</small>
+    </div>`;
+  $('#tbtn').onclick=toggleTheme;
+}
+
+const closeMenu=()=>{$('#nav').classList.remove('open');$('#ov').classList.remove('open')};
+$('#menu').onclick=()=>{$('#nav').classList.toggle('open');$('#ov').classList.toggle('open')};
+$('#ov').onclick=closeMenu;
+
+function route(){
+  const k=(location.hash||'#home').slice(1);
+  const key=V[k]?k:'home';
+  renderNav(key);
+  closeMenu();
+  try{
+    $('#main').innerHTML=V[key]();
+    V[key+'Init']&&V[key+'Init']();
+  }catch(e){
+    $('#main').innerHTML='<div class="c err">เกิดข้อผิดพลาดในการแสดงหน้านี้ ลองรีเฟรชหน้าเว็บ</div>';
+  }
+  scrollTo(0,0);
+}
+
+addEventListener('hashchange',route);
+route();
+</script>
+</body>
+</html>
